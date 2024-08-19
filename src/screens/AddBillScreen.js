@@ -13,7 +13,7 @@ const AddBillScreen = () => {
 
     const [staffs, setStaffs] = useState([]);
     const [selectedStaff, setSelectedStaff] = useState(null);
-    const [loggedInStaff, setLoggedInStaff] = useState(null);
+    const [fullname, setFullname] = useState(null);
     const [fullnameCustomer, setFullnameCustomer] = useState('');
     const [phoneCustomer, setPhoneCustomer] = useState('');
     const [addressCustomer, setAddressCustomer] = useState('');
@@ -25,9 +25,9 @@ const AddBillScreen = () => {
     useEffect(() => {
         const fetchLoggedInStaff = async () => {
             try {
-                const staffDoc = await firestore().collection('Staff').doc(loggedInUserId).get();
+                const staffDoc = await firestore().collection('Staff').doc(fullname).get();
                 if (staffDoc.exists) {
-                    setLoggedInStaff({ ...staffDoc.data(), id: staffDoc.id });
+                    setFullname({ ...staffDoc.data(), id: staffDoc.id });
                 }
             } catch (error) {
                 console.log('Error fetching logged-in staff: ', error);
@@ -66,7 +66,7 @@ const AddBillScreen = () => {
             return;
         }
 
-        if (selectedStaff.fullname !== loggedInStaff?.fullname) {
+        if (setFullname.fullname !== fullname?.fullname) {
             Alert.alert('Lỗi', 'Tên nhân viên không trùng khớp với tên đăng nhập.');
             return;
         }
@@ -82,7 +82,7 @@ const AddBillScreen = () => {
                 createdAt: firestore.FieldValue.serverTimestamp(),
             });
             Alert.alert('Thành công', 'Hóa đơn đã được lưu.');
-            navigation.goBack();
+            navigation.navigate('BillScreen');
         } catch (error) {
             console.log('Error adding bill: ', error);
             Alert.alert('Lỗi', 'Không thể lưu hóa đơn. Vui lòng thử lại.');
